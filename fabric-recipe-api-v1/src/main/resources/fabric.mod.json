@@ -27,9 +27,6 @@
     "main": [
       "net.fabricmc.fabric.impl.recipe.ingredient.CustomIngredientInit",
       "net.fabricmc.fabric.impl.recipe.ingredient.CustomIngredientSync"
-    ],
-    "client": [
-      "net.fabricmc.fabric.impl.recipe.ingredient.client.CustomIngredientSyncClient"
     ]
   },
   "description": "Recipe extensions such as creation of new types of recipe ingredients.",
