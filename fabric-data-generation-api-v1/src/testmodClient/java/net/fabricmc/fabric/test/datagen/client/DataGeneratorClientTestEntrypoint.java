@@ -19,6 +19,7 @@ package net.fabricmc.fabric.test.datagen.client;
 import static net.fabricmc.fabric.test.datagen.DataGeneratorTestContent.MOD_ID;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -96,7 +97,7 @@ public class DataGeneratorClientTestEntrypoint implements DataGeneratorEntrypoin
 					.addLayers(EquipmentModel.LayerType.HORSE_BODY,
 							EquipmentModel.Layer.create(Identifier.of(MOD_ID, "diamond_but_better_alt_id"), false))
 			);
-			modelConsumer.accept(humanoid(GUIDITE, true));
+			modelConsumer.accept(humanoid(GUIDITE, new EquipmentModel.Dyeable(Optional.of(0xFFA500))));
 		}
 	}
 

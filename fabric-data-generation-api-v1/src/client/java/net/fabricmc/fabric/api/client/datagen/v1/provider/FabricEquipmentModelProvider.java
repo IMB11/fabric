@@ -1,9 +1,28 @@
+/*
+ * Copyright (c) 2016, 2017, 2018, 2019 FabricMC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package net.fabricmc.fabric.api.client.datagen.v1.provider;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.render.entity.equipment.EquipmentModel;
 import net.minecraft.data.DataOutput;
@@ -49,12 +68,24 @@ public abstract class FabricEquipmentModelProvider extends FabricCodecDataProvid
 	/**
 	 * Create an equipment model with humanoid and humanoid_leggings layers.
 	 *
+	 * <p>The default dye color will be leather.
+	 *
 	 * @param key     The {@link RegistryKey} used to create the equipment model. This should be the same key used to instantiate your {@link net.minecraft.item.equipment.ArmorMaterial}.
 	 * @param dyeable Whether the texture supports dyeing.
 	 * @return The equipment model with humanoid and humanoid_leggings layers.
 	 */
 	public FabricEquipmentModelBuilder humanoid(RegistryKey<EquipmentAsset> key, boolean dyeable) {
-		return create(key).addHumanoidLayers(key.getValue(), dyeable);
+		return this.humanoid(key, dyeable ? new EquipmentModel.Dyeable(Optional.of(-6265536)) : null);
+	}
+
+	/**
+	 * Create an equipment model with humanoid and humanoid_leggings layers.
+	 * @param key The {@link RegistryKey} used to create the equipment model. This should be the same key used to instantiate your {@link net.minecraft.item.equipment.ArmorMaterial}.
+	 * @param defaultDyeColor The default dye color to use for the equipment model. This will be used for all layers that support dyeing. If this parameter is <code>null</code>, dye support will not be added.
+	 * @return
+	 */
+	public FabricEquipmentModelBuilder humanoid(RegistryKey<EquipmentAsset> key, @Nullable EquipmentModel.Dyeable defaultDyeColor) {
+		return this.multi(key, defaultDyeColor, EquipmentModel.LayerType.HUMANOID, EquipmentModel.LayerType.HUMANOID_LEGGINGS);
 	}
 
 	/**
@@ -70,12 +101,24 @@ public abstract class FabricEquipmentModelProvider extends FabricCodecDataProvid
 	/**
 	 * Create an equipment model with a "horse" layer.
 	 *
+	 * <p>The default dye color will be leather.
+	 *
 	 * @param key     The {@link RegistryKey} used to create the equipment model. This should be the same key used to instantiate your {@link net.minecraft.item.equipment.ArmorMaterial}.
 	 * @param dyeable Whether the texture supports dyeing.
 	 * @return The equipment model with the "horse" layer.
 	 */
 	public FabricEquipmentModelBuilder horse(RegistryKey<EquipmentAsset> key, boolean dyeable) {
-		return create(key).addLayers(EquipmentModel.LayerType.HORSE_BODY, EquipmentModel.Layer.create(key.getValue(), dyeable));
+		return this.horse(key, dyeable ? new EquipmentModel.Dyeable(Optional.of(-6265536)) : null);
+	}
+
+	/**
+	 * Create an equipment model with a "horse" layer.
+	 * @param key The {@link RegistryKey} used to create the equipment model. This should be the same key used to instantiate your {@link net.minecraft.item.equipment.ArmorMaterial}.
+	 * @param defaultDyeColor The default dye color to use for the equipment model. This will be used for all layers that support dyeing. If this parameter is <code>null</code>, dye support will not be added.
+	 * @return
+	 */
+	public FabricEquipmentModelBuilder horse(RegistryKey<EquipmentAsset> key, @Nullable EquipmentModel.Dyeable defaultDyeColor) {
+		return multi(key, defaultDyeColor, EquipmentModel.LayerType.HORSE_BODY);
 	}
 
 	/**
@@ -91,12 +134,24 @@ public abstract class FabricEquipmentModelProvider extends FabricCodecDataProvid
 	/**
 	 * Create an equipment model with a "llama" layer.
 	 *
+	 * <p>The default dye color will be leather.
+	 *
 	 * @param key     The {@link RegistryKey} used to create the equipment model. This should be the same key used to instantiate your {@link net.minecraft.item.equipment.ArmorMaterial}.
 	 * @param dyeable Whether the texture supports dyeing.
 	 * @return The equipment model with the "llama" layer.
 	 */
 	public FabricEquipmentModelBuilder llama(RegistryKey<EquipmentAsset> key, boolean dyeable) {
-		return create(key).addLayers(EquipmentModel.LayerType.LLAMA_BODY, EquipmentModel.Layer.create(key.getValue(), dyeable));
+		return this.llama(key, dyeable ? new EquipmentModel.Dyeable(Optional.of(-6265536)) : null);
+	}
+
+	/**
+	 * Create an equipment model with a "llama" layer.
+	 * @param key The {@link RegistryKey} used to create the equipment model. This should be the same key used to instantiate your {@link net.minecraft.item.equipment.ArmorMaterial}.
+	 * @param defaultDyeColor The default dye color to use for the equipment model. This will be used for all layers that support dyeing. If this parameter is <code>null</code>, dye support will not be added.
+	 * @return The equipment model with the "llama" layer.
+	 */
+	public FabricEquipmentModelBuilder llama(RegistryKey<EquipmentAsset> key, @Nullable EquipmentModel.Dyeable defaultDyeColor) {
+		return multi(key, defaultDyeColor, EquipmentModel.LayerType.LLAMA_BODY);
 	}
 
 	/**
@@ -112,12 +167,24 @@ public abstract class FabricEquipmentModelProvider extends FabricCodecDataProvid
 	/**
 	 * Create an equipment model with a "wings" layer.
 	 *
+	 * <p>The default dye color will be leather.
+	 *
 	 * @param key     The {@link RegistryKey} used to create the equipment model. This should be the same key used to instantiate your {@link net.minecraft.item.equipment.ArmorMaterial}.
 	 * @param dyeable Whether the texture supports dyeing.
 	 * @return The equipment model with the "wings" layer.
 	 */
 	public FabricEquipmentModelBuilder wings(RegistryKey<EquipmentAsset> key, boolean dyeable) {
-		return create(key).addLayers(EquipmentModel.LayerType.WINGS, EquipmentModel.Layer.create(key.getValue(), dyeable));
+		return this.wings(key, dyeable ? new EquipmentModel.Dyeable(Optional.of(-6265536)) : null);
+	}
+
+	/**
+	 * Create an equipment model with a "wings" layer.
+	 * @param key The {@link RegistryKey} used to create the equipment model. This should be the same key used to instantiate your {@link net.minecraft.item.equipment.ArmorMaterial}.
+	 * @param defaultDyeColor The default dye color to use for the equipment model. This will be used for all layers that support dyeing. If this parameter is <code>null</code>, dye support will not be added.
+	 * @return The equipment model with the "wings" layer.
+	 */
+	public FabricEquipmentModelBuilder wings(RegistryKey<EquipmentAsset> key, @Nullable EquipmentModel.Dyeable defaultDyeColor) {
+		return multi(key, defaultDyeColor, EquipmentModel.LayerType.WINGS);
 	}
 
 	/**
@@ -133,12 +200,18 @@ public abstract class FabricEquipmentModelProvider extends FabricCodecDataProvid
 	/**
 	 * Create an equipment model with a "wolf" layer.
 	 *
+	 * <p>The default dye color will be leather.
+	 *
 	 * @param key     The {@link RegistryKey} used to create the equipment model. This should be the same key used to instantiate your {@link net.minecraft.item.equipment.ArmorMaterial}.
 	 * @param dyeable Whether the texture supports dyeing.
 	 * @return The equipment model with the "wolf" layer.
 	 */
 	public FabricEquipmentModelBuilder wolf(RegistryKey<EquipmentAsset> key, boolean dyeable) {
-		return create(key).addLayers(EquipmentModel.LayerType.WOLF_BODY, EquipmentModel.Layer.create(key.getValue(), dyeable));
+		return this.wolf(key, dyeable ? new EquipmentModel.Dyeable(Optional.of(-6265536)) : null);
+	}
+
+	public FabricEquipmentModelBuilder wolf(RegistryKey<EquipmentAsset> key, @Nullable EquipmentModel.Dyeable defaultDyeColor) {
+		return multi(key, defaultDyeColor, EquipmentModel.LayerType.WOLF_BODY);
 	}
 
 	/**
@@ -155,16 +228,31 @@ public abstract class FabricEquipmentModelProvider extends FabricCodecDataProvid
 	/**
 	 * Create an equipment model with multiple layers.
 	 *
+	 * <p>The default dye color will be leather.
+	 *
 	 * @param key     The {@link RegistryKey} used to create the equipment model. This should be the same key used to instantiate your {@link net.minecraft.item.equipment.ArmorMaterial}.
 	 * @param dyeable Whether the textures support dyeing.
 	 * @param layers  The layers to add to the equipment model.
 	 * @return The equipment model with the specified layers.
 	 */
 	public FabricEquipmentModelBuilder multi(RegistryKey<EquipmentAsset> key, boolean dyeable, EquipmentModel.LayerType... layers) {
+		return this.multi(key, dyeable ? new EquipmentModel.Dyeable(Optional.of(-6265536)) : null, layers);
+	}
+
+	/**
+	 * Create an equipment model with multiple layers.
+	 * @param key The {@link RegistryKey} used to create the equipment model. This should be the same key used to instantiate your {@link net.minecraft.item.equipment.ArmorMaterial}.
+	 * @param defaultDyeColor The default dye color to use for the equipment model. This will be used for all layers that support dyeing. If this parameter is <code>null</code>, dye support will not be added.
+	 * @param layers The layers to add to the equipment model.
+	 * @return The equipment model with the specified layers.
+	 */
+	public FabricEquipmentModelBuilder multi(RegistryKey<EquipmentAsset> key, @Nullable EquipmentModel.Dyeable defaultDyeColor, EquipmentModel.LayerType... layers) {
 		FabricEquipmentModelBuilder builder = create(key);
+
 		for (EquipmentModel.LayerType layer : layers) {
-			builder.addLayers(layer, EquipmentModel.Layer.create(key.getValue(), false));
+			builder.addLayers(layer, new EquipmentModel.Layer(key.getValue(), Optional.ofNullable(defaultDyeColor), false));
 		}
+
 		return builder;
 	}
 
@@ -175,8 +263,8 @@ public abstract class FabricEquipmentModelProvider extends FabricCodecDataProvid
 
 	/**
 	 * Implement this method to generate your equipment models.
-	 * <p>
-	 * You can use the various utility methods to quickly create equipment models, or use {@link #create(RegistryKey)} to create a blank equipment model builder.
+	 *
+	 * <p>You can use the various utility methods to quickly create equipment models, or use {@link #create(RegistryKey)} to create a blank equipment model builder.
 	 *
 	 * @param modelConsumer The consumer to use to add your equipment models.
 	 * @param lookup        The {@link RegistryWrapper.WrapperLookup} to use to look up registries.
