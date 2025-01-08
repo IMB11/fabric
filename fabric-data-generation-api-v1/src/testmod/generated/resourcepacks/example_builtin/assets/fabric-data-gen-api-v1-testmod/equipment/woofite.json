@@ -1,0 +1,9 @@
+{
+  "layers": {
+    "wolf_body": [
+      {
+        "texture": "fabric-data-gen-api-v1-testmod:woofite"
+      }
+    ]
+  }
+}

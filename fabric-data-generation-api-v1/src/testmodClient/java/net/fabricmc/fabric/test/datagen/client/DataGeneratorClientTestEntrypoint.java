@@ -21,16 +21,22 @@ import static net.fabricmc.fabric.test.datagen.DataGeneratorTestContent.MOD_ID;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import net.minecraft.client.data.BlockStateModelGenerator;
 import net.minecraft.client.data.ItemModelGenerator;
+import net.minecraft.client.render.entity.equipment.EquipmentModel;
 import net.minecraft.client.texture.atlas.AtlasSource;
 import net.minecraft.client.texture.atlas.AtlasSourceManager;
 import net.minecraft.client.texture.atlas.DirectoryAtlasSource;
 import net.minecraft.data.DataOutput;
+import net.minecraft.item.equipment.EquipmentAsset;
+import net.minecraft.item.equipment.EquipmentAssetKeys;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 
+import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricEquipmentModelProvider;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
@@ -51,6 +57,7 @@ public class DataGeneratorClientTestEntrypoint implements DataGeneratorEntrypoin
 		final FabricDataGenerator.Pack pack = dataGenerator.createBuiltinResourcePack(Identifier.of(MOD_ID, "example_builtin"));
 		pack.addProvider(TestAtlasSourceProvider::new);
 		pack.addProvider(TestModelProvider::new);
+		pack.addProvider(TestEquipmentModelProvider::new);
 	}
 
 	private static class TestAtlasSourceProvider extends FabricCodecDataProvider<List<AtlasSource>> {
@@ -66,6 +73,30 @@ public class DataGeneratorClientTestEntrypoint implements DataGeneratorEntrypoin
 		@Override
 		public String getName() {
 			return "Atlas Sources";
+		}
+	}
+
+	private static class TestEquipmentModelProvider extends FabricEquipmentModelProvider {
+		private static final RegistryKey<EquipmentAsset> WOOFITE = create("woofite");
+		private static final RegistryKey<EquipmentAsset> DIAMOND_BUT_BETTER = create("diamond_but_better");
+		private static final RegistryKey<EquipmentAsset> GUIDITE = create("guidite");
+
+		private TestEquipmentModelProvider(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+			super(dataOutput, registriesFuture);
+		}
+
+		private static RegistryKey<EquipmentAsset> create(String id) {
+			return RegistryKey.of(EquipmentAssetKeys.REGISTRY_KEY, Identifier.of(MOD_ID, id));
+		}
+
+		@Override
+		public void generate(Consumer<FabricEquipmentModelBuilder> modelConsumer, RegistryWrapper.WrapperLookup lookup) {
+			modelConsumer.accept(wolf(WOOFITE));
+			modelConsumer.accept(create(DIAMOND_BUT_BETTER)
+					.addLayers(EquipmentModel.LayerType.HORSE_BODY,
+							EquipmentModel.Layer.create(Identifier.of(MOD_ID, "diamond_but_better_alt_id"), false))
+			);
+			modelConsumer.accept(humanoid(GUIDITE, true));
 		}
 	}
 

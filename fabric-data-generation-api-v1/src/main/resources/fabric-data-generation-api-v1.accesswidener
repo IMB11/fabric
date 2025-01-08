@@ -56,6 +56,8 @@ transitive-accessible class net/minecraft/client/data/BlockStateModelGenerator$C
 accessible class net/minecraft/client/data/ModelProvider$ItemAssets
 accessible class net/minecraft/client/data/ModelProvider$BlockStateSuppliers
 
+accessible method net/minecraft/client/render/entity/equipment/EquipmentModel$Builder <init> ()V
+
 ### Generated access wideners below
 
 transitive-accessible	method	net/minecraft/data/recipe/RecipeGenerator	generate	()V
